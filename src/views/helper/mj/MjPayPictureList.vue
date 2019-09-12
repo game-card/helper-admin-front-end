@@ -4,6 +4,26 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="24">
+          <a-col :md="6" :sm="8">
+            <a-form-item label="状态">
+              <j-dict-select-tag placeholder="请选择状态" v-model="queryParam.status" dictCode="pay_picture_status"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="支付动作">
+              <j-dict-select-tag placeholder="请选择支付动作" v-model="queryParam.action" dictCode="pay_action"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8" >
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
 
         </a-row>
       </a-form>
@@ -88,11 +108,13 @@
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import MjPayPictureModal from './modules/MjPayPictureModal'
+  import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   export default {
     name: "MjPayPictureList",
     mixins:[JeecgListMixin],
     components: {
+      JDictSelectTag,
       MjPayPictureModal
     },
     data () {
@@ -134,6 +156,18 @@
             }
           },
           {
+            title:'支付动作',
+            align:"center",
+            dataIndex: 'action',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['action'], text+"")
+              }
+            }
+          },
+          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
@@ -149,6 +183,7 @@
         },
         dictOptions:{
          status:[],
+         action:[],
         } 
       }
     },
@@ -162,6 +197,11 @@
         initDictOptions('pay_picture_status').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'status', res.result)
+          }
+        })
+        initDictOptions('pay_action').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'action', res.result)
           }
         })
       }

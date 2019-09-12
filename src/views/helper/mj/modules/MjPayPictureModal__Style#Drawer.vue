@@ -19,6 +19,9 @@
         <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['status']" :trigger-change="true" dictCode="pay_picture_status" placeholder="请选择状态"/>
         </a-form-item>
+        <a-form-item label="支付动作" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-dict-select-tag type="list" v-decorator="['action']" :trigger-change="true" dictCode="pay_action" placeholder="请选择支付动作"/>
+        </a-form-item>
         
       </a-form>
     </a-spin>
@@ -61,6 +64,7 @@
         path:{},
         playerId:{},
         status:{},
+        action:{},
         },
         url: {
           add: "/helper.mj/mjPayPicture/add",
@@ -80,7 +84,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'path','playerId','status'))
+          this.form.setFieldsValue(pick(this.model,'path','playerId','status','action'))
         })
       },
       close () {
@@ -123,7 +127,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'path','playerId','status'))
+        this.form.setFieldsValue(pick(row,'path','playerId','status','action'))
       }
       
     }
